@@ -17,7 +17,7 @@ export class ListaLivrosComponent implements OnDestroy {
 
   buscarLivros() {
     this.service.buscar(this.campoBusca).subscribe({
-      next: retornoAPI => console.log(retornoAPI), //A notificação next pode ser emitida várias vezes.
+      next: retornoAPI => console.log(), //A notificação next pode ser emitida várias vezes.
       error: erro => console.log(erro), //o "error" (opcional): encerra o ciclo de vida do Observable. A notificação será emitida apenas uma vez.
       complete: () => console.log('Observable completado') //O "complete" (opcional) também encerra o ciclo de vida do Observable.  A notificação será emitida apenas uma vez.
     }
