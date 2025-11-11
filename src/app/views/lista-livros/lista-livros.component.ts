@@ -1,8 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Item } from './../../models/interfaces';
 import { Component } from '@angular/core';
-import { map, switchMap, tap } from 'rxjs';
-import { Livro } from 'src/app/models/interfaces';
+import { filter, map, switchMap, tap } from 'rxjs';
 import { LivroVolumeInfo } from 'src/app/models/livroVolumeInfo';
 import { LivroService } from 'src/app/service/livro.service';
 
@@ -19,6 +18,7 @@ export class ListaLivrosComponent {
 
   livrosEncontrados$ = this.campoBusca.valueChanges
     .pipe(
+      filter((valorDigitado) => valorDigitado.length >= 3),
       tap(() => console.log('Fluxo Inicial')),
       switchMap((valorDigitado) => this.service.buscar(valorDigitado)), //SwitchMap descarta os valores anteriores (os primeiros caracteres digitados) e envia somente o valor integral (ou seja, a palavra inteira).
       tap(() => console.log('Requisições ao servidor')),
