@@ -16,9 +16,9 @@ export class LivroService {
     const params = new HttpParams().append('q', valorDigitado);
     return this.http.get<LivrosResultado>(this.API, { params })
       .pipe(
-        tap(retornoAPI => console.log('Fluxo do tap', retornoAPI)), // tap: utilizado para debbuging e não modifica o Observable.
+        //tap(retornoAPI => console.log('Fluxo do tap', retornoAPI)), // tap: utilizado para debbuging e não modifica o Observable.
         map(resultado => resultado.items), // map: Operador de transformação. Transforma o observable em um novo de acordo com a função passada.
-        tap(resultado => console.log('Fluxo após map', resultado)),
+        //tap(resultado => console.log('Fluxo após map', resultado)),
       );
   }
 

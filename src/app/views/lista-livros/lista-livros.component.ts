@@ -1,6 +1,7 @@
+import { FormControl } from '@angular/forms';
 import { Item } from './../../models/interfaces';
-import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { map, switchMap, tap } from 'rxjs';
 import { Livro } from 'src/app/models/interfaces';
 import { LivroVolumeInfo } from 'src/app/models/livroVolumeInfo';
 import { LivroService } from 'src/app/service/livro.service';
@@ -10,28 +11,19 @@ import { LivroService } from 'src/app/service/livro.service';
   templateUrl: './lista-livros.component.html',
   styleUrls: ['./lista-livros.component.css']
 })
-export class ListaLivrosComponent implements OnDestroy {
+export class ListaLivrosComponent {
 
-  listaLivros: Livro[];
-  campoBusca: string = '';
-  subscription: Subscription
-  livro: Livro
+  campoBusca = new FormControl();
 
   constructor(private service: LivroService) { }
 
-  buscarLivros() {
-    this.service.buscar(this.campoBusca).subscribe({
-      next: (items) => {
-        this.listaLivros = this.livrosResultadoParaLivros(items)
-      },
-      error: erro => console.log(erro), //o "error" (opcional): encerra o ciclo de vida do Observable. A notificação será emitida apenas uma vez.
-    }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  livrosEncontrados$ = this.campoBusca.valueChanges
+    .pipe(
+      tap(() => console.log('Fluxo Inicial')),
+      switchMap((valorDigitado) => this.service.buscar(valorDigitado)), //SwitchMap descarta os valores anteriores (os primeiros caracteres digitados) e envia somente o valor integral (ou seja, a palavra inteira).
+      tap(() => console.log('Requisições ao servidor')),
+      map((items) => this.livrosResultadoParaLivros(items))
+    )
 
   livrosResultadoParaLivros(items: Item[]): LivroVolumeInfo[] {
     return items.map(item => {
